@@ -1,0 +1,497 @@
+{
+  "source_documents": [
+    {
+      "label": "50538114 - Goodings Grove 345kV SS - GDM - FAT Procedure Customer Witness Signed",
+      "path": "S:\\Manufacturing\\Public\\2 Jobfiles Released\\50538114\\FAT\\50538114 - Goodings Grove 345kV SS - GDM - FAT Procedure Customer Witness Signed.pdf",
+      "pages": 66,
+      "sha256": "ad1044fcb10f2326d2e9004dc2764216b4bdc81056a4abc76475387441c4d10b"
+    }
+  ],
+  "project": {
+    "project_name": "Goodings Grove 345kV - Moisture Monitoring",
+    "substation": "Gooding Grove GIS Substation",
+    "customer": "Siemens Energy",
+    "country": "USA",
+    "voltage": "345kV",
+    "contract_number": "PO -45143865",
+    "manufacturing_number": "50538114"
+  },
+  "equipment": {
+    "system_type": "GDM",
+    "equipment": "GDM System for 564 Sensors",
+    "equipment_tag": null,
+    "ocu_model": null,
+    "operating_frequency": "60Hz",
+    "number_of_ocus": null,
+    "sensor_count": 564,
+    "gdm_module_count": 43
+  },
+  "fat_context": {
+    "document_no": "DMT00196",
+    "revision": "A",
+    "fat_date": "23/06/2026",
+    "date_range": null,
+    "venue": null,
+    "inspection_type": null,
+    "tester": "Kelvin Obi, Afeez Sotannde",
+    "project_owner": "Gareth Fullerton"
+  },
+  "test_coverage": {
+    "sections": {
+      "A": "GDM: System status and data recording",
+      "B": "GDM: Power control and alarms",
+      "C": "Specific function tests",
+      "D": "IEC61850: Common Alarms to SCADA",
+      "E": "Remote Client Connection",
+      "F": "Database Checks",
+      "G": "Final Checks",
+      "H": "Final Checks"
+    },
+    "tests": [
+      {
+        "code": "A1",
+        "name": "Initial GDM system status",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "A2",
+        "name": "Supply interruption",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "A3",
+        "name": "GDM Signal Detection",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "A4",
+        "name": "GDM Trending",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "B1",
+        "name": "GD Alarm Generation",
+        "status": "tested",
+        "page": 43,
+        "confidence": 0.7
+      },
+      {
+        "code": "B2",
+        "name": "Detection of GDM / RDC power failure",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "B3",
+        "name": "Detection of PCU- Server communications failure",
+        "status": "tested",
+        "page": 47,
+        "confidence": 0.7
+      },
+      {
+        "code": "B4",
+        "name": "Check on operation of Server watchdog",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "C1",
+        "name": "Clock synchronisation",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "D1",
+        "name": "Communication of SmartSUB Common Alarms to SCADA",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "E1",
+        "name": "Remote Client Connection Test",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "F1",
+        "name": "Check DB Recovery Model",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "F2",
+        "name": "Check SQL Server Memory Configuration",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "F3",
+        "name": "Test DB Daily Backup Job",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "F4",
+        "name": "Weekly DB Maintenance Job — Step 01 - Delete Statistics Data",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "F5",
+        "name": "Weekly DB Maintenance Job — Step 02 - Reindex Tables",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "F6",
+        "name": "Weekly DB Maintenance Job — Step 03 - Shrink DB",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "F7",
+        "name": "Weekly DB Maintenance Job — Step 04 - Shrink Transaction Logs",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "F8",
+        "name": "Test Weekly DB Maintenance Job",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "G1",
+        "name": "UPS Battery Charge Status",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      },
+      {
+        "code": "G2",
+        "name": "PCU Watchdog Status",
+        "status": "tested",
+        "page": 9,
+        "confidence": 0.7
+      }
+    ],
+    "detected_test_count": 21
+  },
+  "final_checks": [
+    {
+      "name": "UPS Battery Charge Status",
+      "result": "Pass",
+      "note": "Tested by \nQualitrol: Kelvin Obi",
+      "page": 63
+    },
+    {
+      "name": "PCU Watchdog Status",
+      "result": "Enabled",
+      "note": null,
+      "page": 64
+    }
+  ],
+  "document_review": {
+    "summary": null,
+    "referenced_document_count": null,
+    "rows_with_no_changes": null
+  },
+  "observations": [],
+  "evidence_notes": [],
+  "next_actions": [],
+  "system_build": {
+    "hardware_baseline": [
+      {
+        "item": "System Type",
+        "detail": "GDM"
+      },
+      {
+        "item": "RDC/GDDC",
+        "detail": "3"
+      },
+      {
+        "item": "Server",
+        "detail": "which is connected via a GPS/ IRIG antenna cable to the card installed on the GDM system."
+      }
+    ],
+    "software_baseline": [
+      {
+        "item": "SmartPDM Client",
+        "detail": "5.0.9.27583"
+      },
+      {
+        "item": "DMS 61850 Service",
+        "detail": "5.0.8.27098"
+      },
+      {
+        "item": "DMS PDM Protocol",
+        "detail": "5.1.3.0"
+      },
+      {
+        "item": "Report Generation Service",
+        "detail": "5.0.5.26480"
+      },
+      {
+        "item": "Windows",
+        "detail": "Windows 10 22112"
+      },
+      {
+        "item": "SQL Server",
+        "detail": "SQL 2017"
+      },
+      {
+        "item": "SQL Server Management Studio",
+        "detail": "20.2.30.0"
+      },
+      {
+        "item": "UPS Driver",
+        "detail": "6.0.9999.0"
+      }
+    ],
+    "addressing": [
+      {
+        "name": "A86-01",
+        "address": "192.168.6.1",
+        "cabinet": "GDDC1"
+      },
+      {
+        "name": "A86-02",
+        "address": "192.168.6.2",
+        "cabinet": "GDDC1"
+      },
+      {
+        "name": "A86-03",
+        "address": "192.168.6.3",
+        "cabinet": "GDDC1"
+      },
+      {
+        "name": "A86-04",
+        "address": "192.168.6.4",
+        "cabinet": "GDDC1"
+      },
+      {
+        "name": "A86-05",
+        "address": "192.168.6.5",
+        "cabinet": "GDDC1"
+      },
+      {
+        "name": "A86-06",
+        "address": "192.168.6.6",
+        "cabinet": "GDDC1"
+      },
+      {
+        "name": "A86-07",
+        "address": "192.168.6.7",
+        "cabinet": "GDDC1"
+      },
+      {
+        "name": "A86-08",
+        "address": "192.168.6.8",
+        "cabinet": "GDDC1"
+      },
+      {
+        "name": "A86-09",
+        "address": "192.168.6.9",
+        "cabinet": "GDDC1"
+      },
+      {
+        "name": "A86-10",
+        "address": "192.168.6.10",
+        "cabinet": "GDDC1"
+      },
+      {
+        "name": "A86-11",
+        "address": "192.168.6.11",
+        "cabinet": "GDDC1"
+      },
+      {
+        "name": "A86-01",
+        "address": "192.168.6.12",
+        "cabinet": "GDDC2"
+      },
+      {
+        "name": "A86-02",
+        "address": "192.168.6.13",
+        "cabinet": "GDDC2"
+      },
+      {
+        "name": "A86-03",
+        "address": "192.168.6.14",
+        "cabinet": "GDDC2"
+      },
+      {
+        "name": "A86-04",
+        "address": "192.168.6.15",
+        "cabinet": "GDDC2"
+      },
+      {
+        "name": "A86-05",
+        "address": "192.168.6.16",
+        "cabinet": "GDDC2"
+      },
+      {
+        "name": "A86-06",
+        "address": "192.168.6.17",
+        "cabinet": "GDDC2"
+      },
+      {
+        "name": "A86-07",
+        "address": "192.168.6.18",
+        "cabinet": "GDDC2"
+      },
+      {
+        "name": "A86-08",
+        "address": "192.168.6.19",
+        "cabinet": "GDDC2"
+      },
+      {
+        "name": "A86-09",
+        "address": "192.168.6.20",
+        "cabinet": "GDDC2"
+      },
+      {
+        "name": "A86-10",
+        "address": "192.168.6.21",
+        "cabinet": "GDDC2"
+      },
+      {
+        "name": "A86-11",
+        "address": "192.168.6.22",
+        "cabinet": "GDDC2"
+      },
+      {
+        "name": "A86-01",
+        "address": "192.168.6.23",
+        "cabinet": "GDDC3"
+      },
+      {
+        "name": "A86-02",
+        "address": "192.168.6.24",
+        "cabinet": "GDDC3"
+      },
+      {
+        "name": "A86-03",
+        "address": "192.168.6.25",
+        "cabinet": "GDDC3"
+      },
+      {
+        "name": "A86-04",
+        "address": "192.168.6.26",
+        "cabinet": "GDDC3"
+      },
+      {
+        "name": "A86-05",
+        "address": "192.168.6.27",
+        "cabinet": "GDDC3"
+      },
+      {
+        "name": "A86-06",
+        "address": "192.168.6.28",
+        "cabinet": "GDDC3"
+      },
+      {
+        "name": "A86-07",
+        "address": "192.168.6.29",
+        "cabinet": "GDDC3"
+      },
+      {
+        "name": "A86-08",
+        "address": "192.168.6.30",
+        "cabinet": "GDDC3"
+      },
+      {
+        "name": "A86-09",
+        "address": "192.168.6.31",
+        "cabinet": "GDDC3"
+      },
+      {
+        "name": "A86-10",
+        "address": "192.168.6.32",
+        "cabinet": "GDDC3"
+      },
+      {
+        "name": "A86-11",
+        "address": "192.168.6.33",
+        "cabinet": "GDDC3"
+      },
+      {
+        "name": "A86-01",
+        "address": "192.168.6.34",
+        "cabinet": "GDDC4"
+      },
+      {
+        "name": "A86-02",
+        "address": "192.168.6.35",
+        "cabinet": "GDDC4"
+      },
+      {
+        "name": "A86-03",
+        "address": "192.168.6.36",
+        "cabinet": "GDDC4"
+      },
+      {
+        "name": "A86-04",
+        "address": "192.168.6.37",
+        "cabinet": "GDDC4"
+      },
+      {
+        "name": "A86-05",
+        "address": "192.168.6.38",
+        "cabinet": "GDDC4"
+      },
+      {
+        "name": "A86-06",
+        "address": "192.168.6.39",
+        "cabinet": "GDDC4"
+      },
+      {
+        "name": "A86-07",
+        "address": "192.168.6.40",
+        "cabinet": "GDDC4"
+      },
+      {
+        "name": "A86-08",
+        "address": "192.168.6.41",
+        "cabinet": "GDDC4"
+      },
+      {
+        "name": "A86-09",
+        "address": "192.168.6.42",
+        "cabinet": "GDDC4"
+      },
+      {
+        "name": "A86-10",
+        "address": "192.168.6.43",
+        "cabinet": "GDDC4"
+      }
+    ]
+  },
+  "system_variant": "gdm",
+  "readiness_posture": "ready_with_notes",
+  "export_manifest": {
+    "generated_at": "2026-07-06T07:42:38.210290Z",
+    "template_version": "qualitrol-fat-summary-v0.1",
+    "user_edits_made": false
+  }
+}

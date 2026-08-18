@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+build/
+dist/
+*.spec~
+ui-check*.png
+installed-flow-check.png
+logo-header-check.png
+*.log
+*.tmp
+*.zip
+.DS_Store

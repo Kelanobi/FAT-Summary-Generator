@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{{ document_title }}</title>
+<style>
+@page{size:A4 landscape;margin:0}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#30363a;background:#fff}
+.page{width:297mm;height:210mm;page-break-after:always;padding:8.5mm 10.5mm 7mm;position:relative;background:#fbfbfc;overflow:hidden}
+.page:before{content:"";position:absolute;inset:0;background-image:linear-gradient(#edf0f2 1px,transparent 1px),linear-gradient(90deg,#edf0f2 1px,transparent 1px);background-size:18mm 18mm;opacity:.16}
+.page:after{content:"";position:absolute;right:-30mm;top:-38mm;width:105mm;height:105mm;border:20px solid rgba(215,7,18,.035);border-radius:50%}
+.page>*{position:relative;z-index:1}.head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3mm}.logo{width:55mm;height:auto}.meta{text-align:right;font-size:7.4pt;color:#70777d;line-height:1.35}
+.k{font-size:7.7pt;text-transform:uppercase;letter-spacing:1.7px;color:#d70712;font-weight:900;margin:0 0 1mm}
+h1{font-size:24pt;margin:0;line-height:1}.subtitle{font-size:10pt;color:#4e5961;margin:2mm 0 4mm}.redline{height:1.7mm;background:#d70712;border-radius:999px;margin:3mm 0 4mm}
+.grid{display:grid;gap:3.2mm}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g5{grid-template-columns:repeat(5,1fr)}.g6{grid-template-columns:repeat(6,1fr)}
+.card,.metric,.tile{background:#fff;border:1px solid #e1e6e9;border-radius:12px;box-shadow:0 7px 21px rgba(27,31,35,.045)}
+.card{padding:3.5mm}.metric{padding:3.1mm;min-height:20mm}.metric .v{font-size:22pt;line-height:.95;font-weight:900;color:#30363a}.metric .l{font-size:7pt;text-transform:uppercase;letter-spacing:.85px;color:#68737b;font-weight:900;margin-top:1mm}
+h2{font-size:20pt;margin:0 0 3mm}.h3,h3{font-size:8.2pt;text-transform:uppercase;letter-spacing:.85px;margin:0 0 2.5mm;color:#333a3f}
+.info{width:100%;border-collapse:collapse;font-size:8pt}.info td{border-bottom:1px solid #edf0f2;padding:1.55mm 0;vertical-align:top}.info td:first-child{color:#778087;font-weight:800;width:35%}.info td:last-child{font-weight:800}
+.overview{display:grid;gap:2.2mm}.result{display:grid;grid-template-columns:34mm 1fr;gap:2mm;border-left:4px solid #d70712;background:#fff;border-radius:9px;border-top:1px solid #e4e8eb;border-right:1px solid #e4e8eb;border-bottom:1px solid #e4e8eb;padding:2.4mm}.result b{font-size:8.1pt}.result strong{text-transform:uppercase;color:#d70712}.result span{font-size:7.6pt;color:#667079}
+.table{width:100%;border-collapse:separate;border-spacing:0 .85mm;font-size:7.25pt}.table th{text-align:left;text-transform:uppercase;letter-spacing:.7px;color:#707982;font-size:6.55pt;padding:0 1.7mm .7mm}.table td{background:#fff;border-top:1px solid #e5e9ec;border-bottom:1px solid #e5e9ec;padding:1.05mm 1.7mm;vertical-align:top}.table td:first-child{border-left:1px solid #e5e9ec;border-radius:7px 0 0 7px;font-weight:900}.table td:last-child{border-right:1px solid #e5e9ec;border-radius:0 7px 7px 0}
+.dist{display:grid;grid-template-columns:repeat(2,1fr);gap:3mm}.dist .metric{min-height:28mm}.dist .metric .v{font-size:25pt;color:#d70712}
+.small{font-size:7.2pt;color:#737b81;line-height:1.3}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:3mm}.stat{background:#fff;border:1px solid #e2e6e9;border-radius:12px;padding:3mm;text-align:center}.stat .v{font-size:24pt;font-weight:900}.stat .l{text-transform:uppercase;font-size:7pt;color:#6d777f;font-weight:900}
+.coverage{width:100%;border-collapse:separate;border-spacing:0 1.55mm;font-size:7.8pt}.coverage td{padding:1.7mm 2mm;background:#fff;border-top:1px solid #e5e9ec;border-bottom:1px solid #e5e9ec}.coverage td:first-child{border-left:1px solid #e5e9ec;border-radius:9px 0 0 9px;width:16mm;color:#d70712;font-weight:900}.coverage td:nth-child(2){font-weight:800}.coverage td:nth-child(3){width:22mm;text-align:center;font-weight:900}.coverage td:last-child{border-right:1px solid #e5e9ec;border-radius:0 9px 9px 0;width:30mm;text-align:center}
+.pass{background:#edf9f1;color:#177d3b;border:1px solid #c6efcf;border-radius:99px;padding:.9mm 2mm;font-size:7.1pt;font-weight:900}.na{background:#f3f5f7;color:#667079;border:1px solid #d9dfe3;border-radius:99px;padding:.9mm 2mm;font-size:7.1pt;font-weight:900}
+.heat{display:grid;grid-template-columns:repeat(8,1fr);gap:2mm;margin-top:4mm}.heat div{background:#fff;border:1px solid #e1e6e9;border-radius:10px;min-height:21mm;padding:2.5mm}.heat b{display:block;color:#d70712;font-size:15pt}.heat span{font-size:6.8pt;color:#626c73;font-weight:800}
+.closegrid{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm}.closecard{background:#fff;border:1px solid #e1e6e9;border-left:4px solid #d70712;border-radius:12px;padding:3.3mm;min-height:41mm}.closecard b{display:block;font-size:10pt;margin-bottom:1.2mm}.closecard strong{display:block;color:#d70712;text-transform:uppercase;font-size:8.5pt;margin-bottom:2mm}.closecard span{font-size:7.5pt;color:#5f6970;line-height:1.35}
+.final{display:grid;grid-template-columns:95mm 1fr;gap:4mm;margin-top:4mm}.finalbox{background:#fff;border:1px solid #e1e6e9;border-radius:14px;padding:5mm;min-height:48mm}.check{font-size:31pt;color:#2b7a3f;font-weight:900;line-height:.9}.finalbox .status{font-size:25pt;font-weight:900;line-height:1;color:#30363a;margin-top:2mm}
+.footer{position:absolute;left:10.5mm;right:10.5mm;bottom:5mm;border-top:1px solid #e3e6e9;padding-top:2.3mm;font-size:7.2pt;color:#737b81;display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<section class="page">
+ <div class="head"><img class="logo" src="{{ logo_src }}"><div class="meta">Executive Dashboard<br>{{ variant_label }} FAT summary<br>{{ closeout_date }}</div></div>
+ <div class="k">Executive Dashboard</div><h1>{{ dashboard_title }}</h1>
+ <div class="subtitle">{{ system_description }}</div><div class="redline"></div>
+ <div class="grid g6">{% for metric in top_metrics %}<div class="metric"><div class="v">{{ metric.value }}</div><div class="l">{{ metric.label }}</div></div>{% endfor %}</div>
+ <div class="grid g2" style="margin-top:4mm">
+  <div class="card"><h3>Project identity</h3><table class="info">{% for row in project_rows %}<tr><td>{{ row.label }}</td><td>{{ row.value }}</td></tr>{% endfor %}</table></div>
+  <div class="card"><h3>FAT Result Overview</h3><div class="overview">{% for item in result_overview %}<div class="result"><b>{{ item.label }}</b><div><strong>{{ item.value }}</strong><br><span>{{ item.note }}</span></div></div>{% endfor %}</div></div>
+ </div>
+ <div class="footer"><span>{{ footer_title }}</span><span>Page 1 of 4</span></div>
+</section>
+
+<section class="page">
+ <div class="head"><img class="logo" src="{{ logo_src }}"><div class="meta">System Build & Configuration<br>{{ variant_label }} hardware and software baseline<br>{{ closeout_date }}</div></div>
+ <div class="k">System Build & Configuration</div><h1>System Build & Configuration Dashboard</h1>
+ <div class="subtitle">Hardware, module addressing and software baseline</div>
+ <div class="grid g2">
+  <div class="card"><h3>Hardware Baseline</h3><table class="table"><tr><th>Item</th><th>Detail</th></tr>{% for row in hardware_rows %}<tr><td>{{ row.item }}</td><td>{{ row.detail }}</td></tr>{% endfor %}</table></div>
+  <div>
+   <div class="dist">{% for metric in module_distribution %}<div class="metric"><div class="v">{{ metric.value }}</div><div class="l">{{ metric.label }}</div></div>{% endfor %}</div>
+   <div class="card" style="margin-top:3mm"><h3>Addressing</h3><table class="table"><tr><th>Module</th><th>IP Address</th><th>Cabinet</th></tr>{% for row in addressing_rows %}<tr><td>{{ row.name }}</td><td>{{ row.address }}</td><td>{{ row.cabinet }}</td></tr>{% endfor %}</table><div class="small">{{ addressing_summary }}</div></div>
+  </div>
+ </div>
+ <div class="card" style="margin-top:3mm"><h3>Software Baseline</h3><table class="table"><tr><th>Software / Service</th><th>Version</th></tr>{% for row in software_rows %}<tr><td>{{ row.item }}</td><td>{{ row.detail }}</td></tr>{% endfor %}</table><div class="small">{{ software_summary }}</div></div>
+ <div class="footer"><span>{{ footer_title }}</span><span>Page 2 of 4</span></div>
+</section>
+
+<section class="page">
+ <div class="head"><img class="logo" src="{{ logo_src }}"><div class="meta">FAT Performance<br>{{ section_range }}<br>{{ listed_items }} listed items</div></div>
+ <div class="k">FAT Performance</div><h1>{{ variant_title }} FAT Test Performance Dashboard</h1>
+ <div class="subtitle">Operational test section coverage and completion status</div>
+ <div class="stats">{% for stat in performance_stats %}<div class="stat"><div class="v">{{ stat.value }}</div><div class="l">{{ stat.label }}</div></div>{% endfor %}</div>
+ <div class="grid g2" style="margin-top:4mm">
+  <div class="card"><h3>Section Heatmap</h3><table class="coverage">{% for section in section_rows %}<tr><td>{{ section.code }}</td><td>{{ section.short_title }}</td><td>{{ section.count_label }}</td><td><b class="{{ section.status_class }}">{{ section.status_label }}</b></td></tr>{% endfor %}</table></div>
+  <div class="card"><h3>Section Coverage</h3><div class="heat">{% for section in section_rows %}<div><b>{{ section.code }}</b><span>{{ section.short_title }}<br>{{ section.status_label }}</span></div>{% endfor %}</div>{% if exception_note %}<div class="small" style="margin-top:4mm"><b>Exception:</b> {{ exception_note }}</div>{% endif %}</div>
+ </div>
+ <div class="footer"><span>{{ footer_title }}</span><span>Page 3 of 4</span></div>
+</section>
+
+<section class="page">
+ <div class="head"><img class="logo" src="{{ logo_src }}"><div class="meta">Closeout Dashboard<br>FAT completed and passed<br>{{ closeout_date }}</div></div>
+ <div class="k">Closeout Dashboard</div><h1>{{ variant_title }} Follow-up & Closeout Dashboard</h1>
+ <div class="subtitle">Evidence, exceptions, observations and closeout summary</div>
+ <div class="closegrid">{% for card in closeout_cards %}<div class="closecard"><b>{{ card.title }}</b><strong>{{ card.status }}</strong><span>{{ card.body }}</span></div>{% endfor %}</div>
+ <div class="final"><div class="finalbox"><div class="check">&#10003;</div><h3>Overall FAT Status</h3><div class="status">{{ final_status_line }}</div><div class="small">{{ final_status_note }}</div></div><div class="card"><h3>Closeout Notes</h3><div class="overview">{% for callout in closeout_callouts %}<div class="result"><b>{{ callout.title }}</b><span>{{ callout.body }}</span></div>{% endfor %}</div></div></div>
+ <div class="footer"><span>{{ footer_title }}</span><span>Page 4 of 4</span></div>
+</section>
+</body>
+</html>

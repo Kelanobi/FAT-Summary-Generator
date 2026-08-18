@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Qualitrol FAT Summary</title>
+    <link rel="icon" href="favicon.ico?v=20260818-3" sizes="any">
+    <link rel="icon" href="favicon.png?v=20260818-3" type="image/png">
+    <link rel="stylesheet" href="app.css?v=20260818-2">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div class="brand"><img src="qualitrol-logo.png?v=20260818-3" alt="Qualitrol"><span>FAT Summary</span></div>
+        <div id="status" class="status">Ready</div>
+      </header>
+
+      <nav class="progress" aria-label="Workflow">
+        <button class="step active" data-step="import"><b>1</b> Import</button>
+        <button class="step" data-step="review"><b>2</b> Review</button>
+        <button class="step" data-step="observations"><b>3</b> Observations</button>
+        <button class="step" data-step="pictures"><b>4</b> Pictures</button>
+        <button class="step" data-step="preview"><b>5</b> Preview</button>
+      </nav>
+
+      <section id="import" class="page active">
+        <div class="page-head">
+          <div>
+            <h1>Import FAT Report</h1>
+            <p>Select the FAT report to extract project and test information.</p>
+          </div>
+          <select id="variant">
+            <option value="auto">Auto detect</option>
+            <option value="pdm">PDM</option>
+            <option value="gdm">GDM</option>
+            <option value="pdmg">PDM/GDM</option>
+          </select>
+        </div>
+        <label id="pdfDrop" class="dropzone">
+          <input id="pdfs" type="file" accept="application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+          <span class="upload-icon">FAT</span>
+          <strong>Drag & drop FAT PDF or Word file</strong>
+          <em>or</em>
+          <b>Browse File</b>
+          <small>PDF or .docx used for data extraction only</small>
+        </label>
+        <div id="fileCard" class="file-card hidden">
+          <div id="fileTypeIcon" class="pdf-icon">PDF</div>
+          <div><strong id="pdfName"></strong><span id="pdfSize"></span></div>
+          <button id="replacePdf" class="ghost">Replace</button>
+          <button id="removePdf" class="ghost">Remove</button>
+        </div>
+        <div class="footer-actions">
+          <button id="extractBtn" class="primary" disabled>Extract Report Data</button>
+        </div>
+      </section>
+
+      <section id="review" class="page" hidden>
+        <div class="page-head">
+          <div>
+            <h1>Review FAT Data</h1>
+            <p>Check the extracted information before continuing.</p>
+          </div>
+        </div>
+        <div id="fields" class="grid-fields"></div>
+        <div class="footer-actions">
+          <button class="secondary" data-back="import">Back</button>
+          <button id="saveReviewBtn" class="primary">Save & Continue</button>
+        </div>
+      </section>
+
+      <section id="observations" class="page" hidden>
+        <div class="page-head">
+          <div>
+            <h1>Add Observations</h1>
+            <p>Add any additional observations for the FAT summary.</p>
+          </div>
+          <span id="obsCount" class="hint">0 / 2000</span>
+        </div>
+        <label class="textarea-label">Observations</label>
+        <textarea id="observationsText" rows="10" maxlength="2000"></textarea>
+        <div class="footer-actions">
+          <button class="secondary" data-back="review">Back</button>
+          <button id="saveObsBtn" class="primary">Save & Continue</button>
+        </div>
+      </section>
+
+      <section id="pictures" class="page" hidden>
+        <div class="page-head">
+          <div>
+            <h1>Add Pictures</h1>
+            <p>Add up to 4 pictures to the FAT summary.</p>
+          </div>
+          <span id="pictureCount" class="hint">0 of 4 pictures added</span>
+        </div>
+        <div id="pictureGrid" class="picture-grid"></div>
+        <div class="footer-actions">
+          <button class="secondary" data-back="observations">Back</button>
+          <button id="continuePreviewBtn" class="primary">Continue to Preview</button>
+        </div>
+      </section>
+
+      <section id="preview" class="page" hidden>
+        <div class="page-head">
+          <div>
+            <h1>Preview FAT Summary</h1>
+          </div>
+          <div class="actions">
+            <button id="prevPage" class="ghost">‹</button>
+            <span id="pageLabel" class="page-label">Page 1 of 1</span>
+            <button id="nextPage" class="ghost">›</button>
+          </div>
+        </div>
+        <iframe id="viewer" title="PDF preview"></iframe>
+        <div id="success" class="success hidden">
+          <strong><span class="check">✓</span> FAT Summary Generated</strong>
+          <span id="suggestedName"></span>
+          <a id="saveLink" class="primary link-button" href="#">Save PDF</a>
+          <button id="newBtn" class="secondary">Start New FAT</button>
+        </div>
+        <div class="footer-actions">
+          <button class="secondary" data-back="pictures">Back to Edit</button>
+          <button id="previewBtn" class="secondary">Refresh Preview</button>
+          <button id="exportBtn" class="primary">Generate PDF</button>
+        </div>
+      </section>
+    </main>
+    <script src="app.js?v=20260818-2"></script>
+  </body>
+</html>
