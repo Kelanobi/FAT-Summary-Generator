@@ -44,6 +44,7 @@ const labels = {
   "test_coverage.passed_count": "Passed",
   "test_coverage.failed_count": "Failed",
   "test_coverage.na_count": "N/A",
+  "test_coverage.completion_percent": "Completion %",
   "final_checks.ups_result": "Final UPS Check Result",
   "final_checks.ups_note": "Final UPS Check Note",
 };

@@ -76,6 +76,7 @@ class TestCoverage(BaseModel):
     passed_count: int | None = None
     failed_count: int | None = None
     na_count: int | None = None
+    completion_percent: int | None = None
 
 
 class FinalCheck(BaseModel):

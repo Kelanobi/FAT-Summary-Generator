@@ -227,7 +227,9 @@ def _dashboard_check_counts(summary: FatSummary) -> dict[str, int]:
     if summary.test_coverage.na_count is not None:
         na = summary.test_coverage.na_count
     applicable = max(total - na, 0)
-    completion = round((passed / applicable) * 100) if applicable else 100
+    completion = min(round((passed / applicable) * 100) if applicable else 100, 100)
+    if summary.test_coverage.completion_percent is not None:
+        completion = summary.test_coverage.completion_percent
     return {
         "total": total,
         "passed": passed,

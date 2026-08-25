@@ -32,6 +32,7 @@ EDITABLE_FIELDS = {
     "test_coverage.passed_count": "Passed",
     "test_coverage.failed_count": "Failed",
     "test_coverage.na_count": "N/A",
+    "test_coverage.completion_percent": "Completion %",
     "final_checks.ups_result": "Final UPS Check Result",
     "final_checks.ups_note": "Final UPS Check Note",
 }
@@ -43,6 +44,7 @@ INTEGER_FIELDS = {
     "test_coverage.passed_count",
     "test_coverage.failed_count",
     "test_coverage.na_count",
+    "test_coverage.completion_percent",
 }
 
 
@@ -57,6 +59,8 @@ def get_editable_values(summary: FatSummary) -> dict[str, str]:
             value = counts["failed"]
         if path == "test_coverage.na_count":
             value = counts["na"]
+        if path == "test_coverage.completion_percent":
+            value = counts["completion"]
         values[path] = "" if value is None else str(value)
     values["system_variant"] = summary.system_variant.value
     values["readiness_posture"] = summary.readiness_posture.value
@@ -149,4 +153,5 @@ def _review_counts(summary: FatSummary) -> dict[str, int]:
         "passed": summary.test_coverage.passed_count if summary.test_coverage.passed_count is not None else passed,
         "failed": summary.test_coverage.failed_count if summary.test_coverage.failed_count is not None else failed,
         "na": summary.test_coverage.na_count if summary.test_coverage.na_count is not None else na,
+        "completion": summary.test_coverage.completion_percent if summary.test_coverage.completion_percent is not None else min(round((passed / applicable) * 100) if applicable else 100, 100),
     }
