@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from fat_summary_app.extract import extract_fat_summary
-from fat_summary_app.extract.rules import _extract_voltage
+from fat_summary_app.extract.rules import _extract_first_date, _extract_voltage
 from fat_summary_app.models import Equipment, FatSummary, Project
 from fat_summary_app.models.report import AddressingRow
 from fat_summary_app.models.report import ReadinessPosture, SystemVariant
@@ -63,6 +63,12 @@ def test_blank_voltage_does_not_capture_next_label() -> None:
     text = "Project\nAFIF\nVoltage\nCustomer\nSiemens Energy\n"
 
     assert _extract_voltage(text) is None
+
+
+def test_extract_first_date_falls_back_to_any_date() -> None:
+    text = "Project\nExample\nRevision\nA\nReviewed by QA on 14/08/2026\n"
+
+    assert _extract_first_date(text) == "14/08/2026"
 
 
 def test_combined_summary_sets_controlled_follow_up() -> None:

@@ -138,7 +138,7 @@ def _merge_after_fat(summary: FatSummary, doc: PdfDocument) -> None:
     summary.fat_context = FatContext(
         document_no=value_after_label(page_two, "Document No.") or first_match(page_two, r"Document No\.?\s*\n?\s*([A-Z0-9]+)"),
         revision=value_after_label(page_two, "Revision:") or first_match(page_two, r"Revision:?\s*\n?\s*([A-Z])"),
-        fat_date=_extract_first_date(page_two),
+        fat_date=_extract_first_date(page_two) or _extract_first_date(doc.text),
         tester=first_match(page_two, r"System test\s*\n([^\n]+)") or first_match(doc.text, r"Qualitrol:\s*([^\n]+)"),
         project_owner=first_match(page_two, r"Project planning\s*\n([^\n]+)"),
     )
@@ -164,7 +164,12 @@ def _extract_voltage(text: str) -> str | None:
 
 
 def _extract_first_date(text: str) -> str | None:
-    return first_match(text, r"Date\s*\n(\d{1,2}/\d{1,2}/\d{4})") or first_match(text, r"\b(\d{1,2}/\d{1,2}/\d{4})\b")
+    return first_match(text, r"Date\s*\n(\d{1,2}/\d{1,2}/\d{4})") or _first_date_anywhere(text)
+
+
+def _first_date_anywhere(text: str) -> str | None:
+    match = re.search(r"\b(\d{1,2}/\d{1,2}/\d{4})\b", text)
+    return match.group(1) if match else None
 
 
 def _extract_test_coverage(doc: PdfDocument) -> TestCoverage:
