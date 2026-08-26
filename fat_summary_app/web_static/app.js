@@ -28,6 +28,7 @@ const labels = {
   "equipment.equipment": "Equipment",
   "equipment.equipment_tag": "Equipment Tag",
   "equipment.ocu_model": "OCU / Sensor Scope",
+  "equipment.ocu_channel_count": "OCU Channel",
   "equipment.operating_frequency": "Frequency",
   "equipment.number_of_ocus": "OCU / GDM Unit Count",
   "equipment.sensor_count": "Sensor Count",
@@ -45,8 +46,12 @@ const labels = {
   "test_coverage.failed_count": "Failed",
   "test_coverage.na_count": "N/A",
   "test_coverage.completion_percent": "Completion %",
-  "final_checks.ups_result": "Final UPS Check Result",
-  "final_checks.ups_note": "Final UPS Check Note",
+  "final_checks.ups_result": "UPS / FINAL CHECKS result",
+  "final_checks.ups_note": "UPS / FINAL CHECKS note",
+};
+
+const selectOptions = {
+  "final_checks.ups_result": ["", "PASS", "FAIL"],
 };
 
 const $ = (id) => document.getElementById(id);
@@ -158,10 +163,18 @@ function renderFields() {
   Object.entries(labels).forEach(([key, label]) => {
     const wrap = document.createElement("label");
     wrap.className = "field";
-    const input = document.createElement("input");
-    input.type = "text";
+    const input = selectOptions[key] ? document.createElement("select") : document.createElement("input");
+    if (!selectOptions[key]) input.type = "text";
     input.dataset.key = key;
-    input.value = state.values[key] ?? "";
+    if (selectOptions[key]) {
+      selectOptions[key].forEach((optionValue) => {
+        const option = document.createElement("option");
+        option.value = optionValue;
+        option.textContent = optionValue || "Select";
+        input.appendChild(option);
+      });
+    }
+    input.value = normalizeFieldValue(key, state.values[key] ?? "");
     input.addEventListener("input", () => {
       state.values[key] = input.value;
       setStatus("Review edits pending");
@@ -169,6 +182,17 @@ function renderFields() {
     wrap.append(label, input);
     root.appendChild(wrap);
   });
+}
+
+function normalizeFieldValue(key, value) {
+  if (key === "final_checks.ups_result") {
+    const normalized = String(value || "").trim().toUpperCase();
+    if (normalized === "PASSED") return "PASS";
+    if (normalized === "FAILED") return "FAIL";
+    if (normalized === "PASS" || normalized === "FAIL") return normalized;
+    return "";
+  }
+  return value;
 }
 
 function collectValues() {

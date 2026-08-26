@@ -264,7 +264,9 @@ def _ocu_count(summary: FatSummary) -> int | None:
     return int(number) if number else None
 
 
-def _ocu_channel_count(summary: FatSummary) -> int | None:
+def _ocu_channel_count(summary: FatSummary) -> str | int | None:
+    if summary.equipment.ocu_channel_count:
+        return summary.equipment.ocu_channel_count
     formula = _ocu_formula_counts(summary)
     if formula:
         return sum(units * channels for units, channels in formula)

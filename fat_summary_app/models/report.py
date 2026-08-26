@@ -44,6 +44,7 @@ class Equipment(BaseModel):
     equipment: str | None = None
     equipment_tag: str | None = None
     ocu_model: str | None = None
+    ocu_channel_count: str | None = None
     operating_frequency: str | None = None
     number_of_ocus: str | None = None
     sensor_count: int | None = None

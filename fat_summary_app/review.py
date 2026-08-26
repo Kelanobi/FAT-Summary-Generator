@@ -16,6 +16,7 @@ EDITABLE_FIELDS = {
     "equipment.equipment": "Equipment",
     "equipment.equipment_tag": "Equipment Tag",
     "equipment.ocu_model": "OCU / Sensor Scope",
+    "equipment.ocu_channel_count": "OCU Channel",
     "equipment.operating_frequency": "Frequency",
     "equipment.number_of_ocus": "OCU / GDM Unit Count",
     "equipment.sensor_count": "Sensor Count",
@@ -33,8 +34,8 @@ EDITABLE_FIELDS = {
     "test_coverage.failed_count": "Failed",
     "test_coverage.na_count": "N/A",
     "test_coverage.completion_percent": "Completion %",
-    "final_checks.ups_result": "Final UPS Check Result",
-    "final_checks.ups_note": "Final UPS Check Note",
+    "final_checks.ups_result": "UPS / FINAL CHECKS result",
+    "final_checks.ups_note": "UPS / FINAL CHECKS note",
 }
 
 INTEGER_FIELDS = {
@@ -138,7 +139,7 @@ def _set_special_path(summary: FatSummary, path: str, value: str | int | None) -
         check = FinalCheck(name="UPS Battery Charge Status")
         summary.final_checks.append(check)
     if path == "final_checks.ups_result":
-        check.result = None if value is None else str(value)
+        check.result = None if value is None else str(value).upper()
     if path == "final_checks.ups_note":
         check.note = None if value is None else str(value)
 
