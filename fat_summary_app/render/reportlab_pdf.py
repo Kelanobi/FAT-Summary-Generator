@@ -304,7 +304,10 @@ def _manual_ocu_total(value: str | None) -> int | None:
 
 def _coverage_status(summary: FatSummary, area: str) -> str:
     if area == "ups" and summary.final_checks:
-        if any((check.result or check.note or "").strip() for check in summary.final_checks):
+        check = next((item for item in summary.final_checks if "ups" in item.name.lower()), None)
+        if check and check.result and check.result.strip():
+            return _normalize_status(check.result)
+        if any((check.result or "").strip() for check in summary.final_checks):
             return "PASS"
     if area == "software" and summary.system_build.software_baseline:
         return "PASS"
@@ -321,8 +324,16 @@ def _ups_final_check_text(summary: FatSummary) -> str:
     check = next((item for item in summary.final_checks if "ups" in item.name.lower()), None)
     if not check:
         return "UPS/final checks passed"
-    parts = [part.strip() for part in [check.note, check.result] if part and part.strip()]
-    return " / ".join(parts) or "UPS/final checks passed"
+    return check.note.strip() if check.note and check.note.strip() else "UPS/final checks completed"
+
+
+def _normalize_status(value: str) -> str:
+    normalized = value.strip().upper()
+    if normalized == "PASSED":
+        return "PASS"
+    if normalized == "FAILED":
+        return "FAIL"
+    return normalized
 
 
 def _extract_trailing_pictures(summary: FatSummary) -> list[PictureItem]:

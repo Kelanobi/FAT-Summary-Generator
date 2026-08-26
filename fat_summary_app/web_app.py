@@ -42,7 +42,7 @@ class SessionState:
 
 
 class AppHandler(BaseHTTPRequestHandler):
-    server_version = "QualitrolFATSummary/1.0"
+    server_version = "QualitrolFATSummary/1.5"
 
     def do_GET(self) -> None:
         parsed = urlparse(self.path)

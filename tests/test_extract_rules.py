@@ -3,10 +3,10 @@ from __future__ import annotations
 from fat_summary_app.extract import extract_fat_summary
 from fat_summary_app.extract.rules import _extract_first_date, _extract_voltage
 from fat_summary_app.models import Equipment, FatSummary, Project
-from fat_summary_app.models.report import AddressingRow
+from fat_summary_app.models.report import AddressingRow, FinalCheck
 from fat_summary_app.models.report import ReadinessPosture, SystemVariant
 from fat_summary_app.render import build_template_context, build_visual_template_context, render_visual_summary_html, write_visual_summary_pdf
-from fat_summary_app.render.reportlab_pdf import _dashboard_check_counts, _scope_tiles
+from fat_summary_app.render.reportlab_pdf import _coverage_status, _dashboard_check_counts, _scope_tiles, _ups_final_check_text
 from fat_summary_app.review import apply_review_edits, get_editable_values
 from fat_summary_app.models.report import TestCoverage as CoverageModel
 from fat_summary_app.models.report import TestItem as CoverageItem
@@ -322,6 +322,13 @@ def test_reviewed_total_ocu_overrides_formula_count() -> None:
     tiles = {label: value for label, value, _note in _scope_tiles(updated, updated.system_variant)}
 
     assert tiles["OCU"] == "20"
+
+
+def test_ups_final_checks_result_and_note_render_separately() -> None:
+    summary = FatSummary(final_checks=[FinalCheck(name="UPS Battery Charge Status", result="PASS", note="Tested by: Kelvin Obi")])
+
+    assert _coverage_status(summary, "ups") == "PASS"
+    assert _ups_final_check_text(summary) == "Tested by: Kelvin Obi"
 
 
 def test_applies_review_edits() -> None:
