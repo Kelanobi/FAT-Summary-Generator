@@ -282,7 +282,7 @@ def _top_metrics(summary: FatSummary, variant: SystemVariant) -> list[dict[str, 
     voltage = _display(summary.project.voltage)
     frequency = _display(summary.equipment.operating_frequency)
     physical = "DONE" if _has_visual_inspection(summary) else MISSING
-    ocu_count = _display(_number_from_text(summary.equipment.number_of_ocus))
+    ocu_count = _display(_total_ocu_count(summary))
     sensor_count = _display(summary.equipment.sensor_count)
     gdm_modules = _display(summary.equipment.gdm_module_count)
     gddc_count = _gddc_count(summary)
@@ -378,7 +378,7 @@ def _hardware_rows(summary: FatSummary, variant: SystemVariant) -> list[dict[str
 
 
 def _module_distribution(summary: FatSummary, variant: SystemVariant) -> list[dict[str, str]]:
-    ocu_count = _display(_number_from_text(summary.equipment.number_of_ocus))
+    ocu_count = _display(_total_ocu_count(summary))
     sensor_count = _display(summary.equipment.sensor_count)
     gdm_modules = _display(summary.equipment.gdm_module_count)
     if variant == SystemVariant.GDM:
@@ -449,7 +449,7 @@ def _cover_metrics(summary: FatSummary, variant: SystemVariant) -> list[dict[str
     is_gdm = variant == SystemVariant.GDM
     system_type = _display(summary.equipment.system_type or summary.equipment.equipment)
     unit_label = "A86 Modules" if is_gdm else "OCUs" if variant in {SystemVariant.PDM, SystemVariant.PDM_GDM} else "Units"
-    units = _display(summary.equipment.gdm_module_count if is_gdm else _number_from_text(summary.equipment.number_of_ocus))
+    units = _display(summary.equipment.gdm_module_count if is_gdm else _total_ocu_count(summary))
     voltage = _display(summary.project.voltage)
     frequency = _display(summary.equipment.operating_frequency)
     sensors = _display(summary.equipment.sensor_count)
@@ -471,6 +471,29 @@ def _number_from_text(value: str | None) -> str | None:
         return None
     digits = "".join(ch for ch in value.split(",", 1)[0] if ch.isdigit())
     return digits or None
+
+
+def _total_ocu_count(summary: FatSummary) -> str | None:
+    manual_total = _manual_ocu_total(summary.equipment.ocu_model)
+    if manual_total is not None:
+        return str(manual_total)
+    formula = [
+        (int(units), int(_channels))
+        for units, _channels in re.findall(r"\b(\d{1,3})\s*x\s*(\d{1,3})\s*CH\b", summary.equipment.ocu_model or "", flags=re.IGNORECASE)
+    ]
+    if formula:
+        return str(sum(units for units, _channels in formula))
+    return _number_from_text(summary.equipment.number_of_ocus)
+
+
+def _manual_ocu_total(value: str | None) -> int | None:
+    if not value:
+        return None
+    text = value.strip()
+    if re.fullmatch(r"\d{1,4}", text):
+        return int(text)
+    match = re.fullmatch(r"(\d{1,4})\s*OCU(?:S)?", text, flags=re.IGNORECASE)
+    return int(match.group(1)) if match else None
 
 
 def _section_range(variant: SystemVariant) -> str:

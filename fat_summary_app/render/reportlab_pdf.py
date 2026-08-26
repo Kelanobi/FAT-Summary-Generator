@@ -257,6 +257,9 @@ def _scope_tiles(summary: FatSummary, variant: SystemVariant) -> list[tuple[str,
 
 
 def _ocu_count(summary: FatSummary) -> int | None:
+    manual_total = _manual_ocu_total(summary.equipment.ocu_model)
+    if manual_total is not None:
+        return manual_total
     formula = _ocu_formula_counts(summary)
     if formula:
         return sum(units for units, _channels in formula)
@@ -287,6 +290,16 @@ def _ocu_formula_counts(summary: FatSummary) -> list[tuple[int, int]]:
         (int(units), int(channels))
         for units, channels in re.findall(r"\b(\d{1,3})\s*x\s*(\d{1,3})\s*CH\b", text, flags=re.IGNORECASE)
     ]
+
+
+def _manual_ocu_total(value: str | None) -> int | None:
+    if not value:
+        return None
+    text = value.strip()
+    if re.fullmatch(r"\d{1,4}", text):
+        return int(text)
+    match = re.fullmatch(r"(\d{1,4})\s*OCU(?:S)?", text, flags=re.IGNORECASE)
+    return int(match.group(1)) if match else None
 
 
 def _coverage_status(summary: FatSummary, area: str) -> str:

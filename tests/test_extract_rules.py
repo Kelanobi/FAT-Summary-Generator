@@ -301,6 +301,23 @@ def test_scope_tiles_calculate_ocu_channels_and_gdm_sensors() -> None:
     assert "GDDC cabinets" not in tiles
 
 
+def test_reviewed_total_ocu_overrides_formula_count() -> None:
+    summary = FatSummary(
+        equipment=Equipment(ocu_model="12X6Ch, 6X3Ch"),
+        system_variant=SystemVariant.PDM,
+    )
+
+    tiles = {label: value for label, value, _note in _scope_tiles(summary, summary.system_variant)}
+    assert tiles["OCU"] == "18"
+
+    values = get_editable_values(summary)
+    values["equipment.ocu_model"] = "20"
+    updated = apply_review_edits(summary, values)
+    tiles = {label: value for label, value, _note in _scope_tiles(updated, updated.system_variant)}
+
+    assert tiles["OCU"] == "20"
+
+
 def test_applies_review_edits() -> None:
     summary = extract_fat_summary([GOODINGS])
     values = get_editable_values(summary)
