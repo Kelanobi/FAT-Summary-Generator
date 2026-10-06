@@ -12,6 +12,7 @@ const state = {
   page: 1,
   pages: 1,
   filename: "Qualitrol_FAT_Summary.pdf",
+  previewDirty: true,
 };
 
 const labels = {
@@ -176,6 +177,7 @@ function renderFields() {
     input.value = normalizeFieldValue(key, state.values[key] ?? "");
     input.addEventListener("input", () => {
       state.values[key] = input.value;
+      markPreviewDirty();
       setStatus("Review edits pending");
     });
     wrap.append(label, input);
@@ -202,6 +204,7 @@ function collectValues() {
 
 function updateObservationCount() {
   $("obsCount").textContent = `${$("observationsText").value.length} / 2000`;
+  markPreviewDirty();
 }
 
 function buildPictureCards() {
@@ -217,6 +220,7 @@ function buildPictureCards() {
         <strong>Picture ${index + 1}</strong>
       </label>
       <input class="caption" type="text" placeholder="Caption">
+      <small class="picture-size"></small>
       <button class="ghost remove-picture" type="button">Remove</button>
     `;
     const fileInput = card.querySelector("input[type=file]");
@@ -224,6 +228,7 @@ function buildPictureCards() {
     fileInput.addEventListener("change", (event) => setPicture(index, event.target.files[0] || null, card));
     caption.addEventListener("input", () => {
       state.pictures[index].caption = caption.value;
+      markPreviewDirty();
     });
     card.querySelector(".remove-picture").addEventListener("click", () => removePicture(index, card));
     wireDropzone(card.querySelector(".picture-drop"), (files) => setPicture(index, files[0] || null, card));
@@ -232,22 +237,35 @@ function buildPictureCards() {
   updatePictureCount();
 }
 
-function setPicture(index, file, card) {
+async function setPicture(index, file, card) {
   if (!file) return;
-  state.pictures[index].file = file;
+  if (!file.type.startsWith("image/")) {
+    setStatus("Choose a JPEG or PNG picture.");
+    return;
+  }
+  setStatus(`Optimizing picture ${index + 1}...`);
+  let optimized;
+  try {
+    optimized = await optimizePicture(file);
+  } catch (_error) {
+    setStatus(`Picture ${index + 1} could not be processed.`);
+    return;
+  }
+  releasePictureUrl(state.pictures[index]);
+  state.pictures[index].file = optimized;
+  state.pictures[index].objectUrl = URL.createObjectURL(optimized);
   const thumb = card.querySelector(".thumb");
   thumb.textContent = "";
   thumb.classList.add("has-image");
-  if (file.type.startsWith("image/")) {
-    thumb.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
-  } else {
-    thumb.style.backgroundImage = "";
-    thumb.textContent = "PDF";
-  }
+  thumb.style.backgroundImage = `url(${state.pictures[index].objectUrl})`;
+  card.querySelector(".picture-size").textContent = `${formatSize(file.size)} → ${formatSize(optimized.size)}`;
+  markPreviewDirty();
   updatePictureCount();
+  setStatus("Picture optimized and ready");
 }
 
 function removePicture(index, card) {
+  releasePictureUrl(state.pictures[index]);
   state.pictures[index] = { file: null, caption: "" };
   card.querySelector("input[type=file]").value = "";
   card.querySelector(".caption").value = "";
@@ -255,7 +273,38 @@ function removePicture(index, card) {
   thumb.classList.remove("has-image");
   thumb.style.backgroundImage = "";
   thumb.textContent = "+";
+  card.querySelector(".picture-size").textContent = "";
+  markPreviewDirty();
   updatePictureCount();
+}
+
+async function optimizePicture(file) {
+  const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+  const scale = Math.min(1, 2000 / Math.max(bitmap.width, bitmap.height));
+  const width = Math.max(1, Math.round(bitmap.width * scale));
+  const height = Math.max(1, Math.round(bitmap.height * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext("2d", { alpha: false });
+  context.fillStyle = "#fff";
+  context.fillRect(0, 0, width, height);
+  context.drawImage(bitmap, 0, 0, width, height);
+  bitmap.close();
+  const blob = await new Promise((resolve, reject) => {
+    canvas.toBlob((result) => result ? resolve(result) : reject(new Error("Image compression failed")), "image/jpeg", 0.82);
+  });
+  const stem = file.name.replace(/\.[^.]+$/, "") || "picture";
+  return new File([blob], `${stem}.jpg`, { type: "image/jpeg", lastModified: Date.now() });
+}
+
+function releasePictureUrl(picture) {
+  if (picture?.objectUrl) URL.revokeObjectURL(picture.objectUrl);
+}
+
+function markPreviewDirty() {
+  state.previewDirty = true;
+  if ($("previewState")) $("previewState").textContent = "Changes are ready to refresh.";
 }
 
 function updatePictureCount() {
@@ -292,6 +341,8 @@ async function render(preview) {
       unlock("preview");
       show("preview");
       loadPreview();
+      state.previewDirty = false;
+      $("previewState").textContent = "Preview is up to date.";
       setStatus("Preview ready");
     } else {
       state.outputUrl = data.url;
@@ -322,6 +373,7 @@ function movePage(delta) {
 }
 
 function startNew() {
+  state.pictures.forEach(releasePictureUrl);
   state.session = "";
   state.values = {};
   state.pdf = null;
@@ -330,6 +382,7 @@ function startNew() {
   state.outputUrl = "";
   state.page = 1;
   state.pages = 1;
+  state.previewDirty = true;
   state.unlocked = 0;
   $("fields").innerHTML = "";
   $("observationsText").value = "";

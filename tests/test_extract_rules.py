@@ -12,6 +12,7 @@ from fat_summary_app.models.report import TestCoverage as CoverageModel
 from fat_summary_app.models.report import TestItem as CoverageItem
 from fat_summary_app.models.report import PictureEvidence, SourceDocument
 from fat_summary_app.render.reportlab_pdf import _extract_trailing_pictures, _manual_pictures
+from fat_summary_app.web_app import _optimize_picture
 
 
 AFIF = r"C:\Users\kelvin.obi\Desktop\50577444 - AFIF1 PSS1 - PDM GDM - After FAT Procedure.pdf"
@@ -264,6 +265,22 @@ def test_uploaded_picture_evidence_is_the_report_picture_source(tmp_path) -> Non
 
     assert len(pictures) == 1
     assert pictures[0].caption == "Uploaded OCU evidence"
+
+
+def test_phone_picture_is_resized_and_compressed(tmp_path) -> None:
+    from PIL import Image
+
+    source = tmp_path / "phone-photo.png"
+    output = tmp_path / "optimized.jpg"
+    Image.effect_noise((4032, 3024), 90).convert("RGB").save(source, "PNG")
+
+    with source.open("rb") as handle:
+        _optimize_picture(handle, output)
+
+    with Image.open(output) as optimized:
+        assert max(optimized.size) == 2000
+        assert optimized.mode == "RGB"
+    assert output.stat().st_size < source.stat().st_size
 
 
 def test_completed_fat_na_items_are_excluded_from_completion() -> None:

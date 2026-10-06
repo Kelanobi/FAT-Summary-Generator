@@ -14,6 +14,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 import fitz
+from PIL import Image, ImageOps
 
 from fat_summary_app.extract import extract_fat_summary
 from fat_summary_app.extract.docx import docx_to_text_pdf
@@ -42,7 +43,7 @@ class SessionState:
 
 
 class AppHandler(BaseHTTPRequestHandler):
-    server_version = "QualitrolFATSummary/1.5"
+    server_version = "QualitrolFATSummary/1.5.1"
 
     def do_GET(self) -> None:
         parsed = urlparse(self.path)
@@ -149,10 +150,8 @@ class AppHandler(BaseHTTPRequestHandler):
                 item = item[0]
             if not item.filename:
                 continue
-            suffix = Path(item.filename).suffix or ".png"
-            path = session.root / f"picture-{index}{suffix}"
-            with path.open("wb") as handle:
-                shutil.copyfileobj(item.file, handle)
+            path = session.root / f"picture-{index}.jpg"
+            _optimize_picture(item.file, path)
             pictures.append(PictureEvidence(path=str(path), caption=_field(form, f"caption{index}") or f"Picture {index}"))
         return pictures
 
@@ -197,6 +196,21 @@ def _field(form: cgi.FieldStorage, key: str) -> str:
 
 def _safe_name(name: str) -> str:
     return "".join(char for char in Path(name).name if char.isalnum() or char in " ._-").strip() or "upload.pdf"
+
+
+def _optimize_picture(source: object, output_path: Path) -> None:
+    """Normalize phone photos once so preview and export stay fast and compact."""
+    with Image.open(source) as image:
+        image = ImageOps.exif_transpose(image)
+        image.thumbnail((2000, 2000), Image.Resampling.LANCZOS)
+        if image.mode != "RGB":
+            background = Image.new("RGB", image.size, "white")
+            if "A" in image.getbands():
+                background.paste(image, mask=image.getchannel("A"))
+            else:
+                background.paste(image.convert("RGB"))
+            image = background
+        image.save(output_path, "JPEG", quality=82, optimize=True, progressive=True, dpi=(150, 150))
 
 
 def _prepare_source(path: Path, session: SessionState) -> Path:

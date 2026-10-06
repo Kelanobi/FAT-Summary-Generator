@@ -7,6 +7,7 @@ from pathlib import Path
 from textwrap import wrap
 
 import fitz
+from PIL import Image, ImageOps
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.units import mm
@@ -170,18 +171,19 @@ def _manual_pictures(summary: FatSummary) -> list[PictureItem]:
         if not path.exists():
             continue
         try:
-            with fitz.open(path) as doc:
-                if doc.page_count:
-                    pix = doc[0].get_pixmap(matrix=fitz.Matrix(1.7, 1.7), alpha=False)
-                    pictures.append(PictureItem(pix.tobytes("png"), pix.width, pix.height, item.caption))
-                    continue
+            with Image.open(path) as image:
+                image = ImageOps.exif_transpose(image).convert("RGB")
+                data = io.BytesIO()
+                image.save(data, "JPEG", quality=82, optimize=True)
+                pictures.append(PictureItem(data.getvalue(), image.width, image.height, item.caption))
+                continue
         except Exception:
             pass
         try:
-            pix = fitz.Pixmap(str(path))
-            if pix.alpha or pix.n > 3:
-                pix = fitz.Pixmap(fitz.csRGB, pix)
-            pictures.append(PictureItem(pix.tobytes("png"), pix.width, pix.height, item.caption))
+            with fitz.open(path) as doc:
+                if doc.page_count:
+                    pix = doc[0].get_pixmap(matrix=fitz.Matrix(1.7, 1.7), alpha=False)
+                    pictures.append(PictureItem(pix.tobytes("jpeg", jpg_quality=82), pix.width, pix.height, item.caption))
         except Exception:
             continue
     return pictures

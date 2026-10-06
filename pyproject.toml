@@ -1,6 +1,6 @@
 [project]
 name = "fat-summary-app"
-version = "1.5.0"
+version = "1.5.1"
 description = "Offline FAT report extraction and executive summary generation prototype."
 requires-python = ">=3.12"
 dependencies = [
@@ -8,6 +8,7 @@ dependencies = [
   "PyMuPDF>=1.24",
   "Jinja2>=3.1",
   "reportlab>=5.0",
+  "Pillow>=10.0",
   "playwright>=1.61",
 ]
 
